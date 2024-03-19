@@ -1,35 +1,42 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import Botao from "./components/Botao";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+	const [numero, setNumero] = useState(0);
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  );
+	function incrementar(): void {
+		setNumero(numero + 1);
+	}
+
+	function decrementar(): void {
+		setNumero(numero - 1);
+	}
+
+	return (
+		<>
+			<Botao
+				className="br-button secondary"
+				action={decrementar}
+				label="-"
+			/>
+			<span className={`${numero >= 0 ? "verde" : "vermelho"}`}>
+				{numero}
+			</span>
+			<Botao
+				className="br-button primary"
+				action={incrementar}
+				label="+"
+			/>
+			<div className="m-5">
+				{numero % 2 === 0
+					? "Este número é par!"
+					: "Este número é ímpar!"}
+			</div>
+
+			<div>{numero < 0 && <span>Este número é negativo</span>}</div>
+		</>
+	);
 }
 
 export default App;

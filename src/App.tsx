@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Sobre from "./pages/Sobre.tsx";
 import Home from "./pages/Home.tsx";
 
 function App() {
@@ -10,10 +9,6 @@ function App() {
 					<Route
 						path="/"
 						element={<Home />}
-					/>
-					<Route
-						path="/sobre"
-						element={<Sobre />}
 					/>
 				</Routes>
 			</BrowserRouter>

@@ -1,49 +1,59 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 
-export default function Formulario() {
-	// Estado para armazenar os valores dos campos do formulário
-	const [nome, setNome] = useState("");
-	const [email, setEmail] = useState("");
+export default function Form() {
+	const { register, handleSubmit, getValues, reset } = useForm();
 
-	// Manipulador para atualizar o estado quando o campo Nome for alterado
-	function handleNomeChange(event): void {
-		setNome(event.target.value);
+	function onSubmit(data: any): void {
+		console.log(data); // Aqui estão os dados do formulário
 	}
 
-	// Manipulador para atualizar o estado quando o campo Email for alterado
-	function handleEmailChange(event): void {
-		setEmail(event.target.value);
+	function mostrarValor(): void {
+		const { nome, email } = getValues();
+
+		// Realize a validação dinâmica com os valores dos campos
+		// Exemplo de validação simples
+		console.log("valor de nome: ", nome);
+		console.log("valor de email: ", email);
 	}
 
-	// Manipulador para lidar com o envio do formulário
-	function handleSubmit(event): void {
-		event.preventDefault();
-		console.log("Nome:", nome);
-		console.log("Email:", email);
-		// Aqui você pode enviar os dados para o servidor ou realizar outras ações
+	function limparValor(): void {
+		console.log("Antes de limpar", getValues());
+		reset();
+		console.log("Depois de limpar", getValues());
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form onSubmit={handleSubmit(onSubmit)}>
 			<label>
 				Nome:
 				<input
 					type="text"
-					value={nome}
-					onChange={handleNomeChange}
+					{...register("nome")}
 				/>
 			</label>
 			<br />
 			<label>
-				Email:
+				E-mail:
 				<input
 					type="email"
-					value={email}
-					onChange={handleEmailChange}
+					{...register("email")}
 				/>
 			</label>
 			<br />
+
+			<button
+				type="button"
+				onClick={mostrarValor}
+			>
+				Mostrar valores
+			</button>
 			<button type="submit">Enviar</button>
+			<button
+				type="button"
+				onClick={limparValor}
+			>
+				Limpar valores
+			</button>
 		</form>
 	);
 }

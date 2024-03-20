@@ -1,27 +1,28 @@
 import { useEffect, useState } from "react";
-import HPService from "../src/services/HPService";
+import DisneyService from "../src/services/DisneyService";
 
 export default function Home() {
-	const [HP, setHP] = useState([]);
+	const [disney, setDisney] = useState([]);
 
 	useEffect(() => {
-		handleHP();
+		handleDisney();
 	}, []);
 
-	async function handleHP() {
+	async function handleDisney() {
 		try {
-			const response = await HPService.allCharacters();
-			setHP(response);
-			console.log("response", response);
+			const response = await DisneyService.allCharacters();
+			setDisney(response.data);
+			console.log("response", response.data);
 		} catch (error) {
 			console.log("Erro", error);
 		}
+		0;
 	}
 
 	return (
 		<>
 			<div className="row m-5">
-				{HP.map((character: any, index: number) => (
+				{disney.map((character: any, index: number) => (
 					<div
 						key={index}
 						className="col-sm-6 col-md-4 col-lg-3"
@@ -31,15 +32,16 @@ export default function Home() {
 							<div className="card-content d-flex justify-content-center">
 								<img
 									src={
-										character.image
-											? character.image
-											: "https://miro.medium.com/v2/resize:fit:680/1*xxpmeQ7q5LzV0s2no2QAmg.png"
+										character.imageUrl
+											? character.imageUrl
+											: "https://images.impresa.pt/sicnot/2023-10-17-DISNEY-100.png-5ad30ef6/original/mw-1920"
 									}
 									alt={character.name}
 									style={{
 										height: "10rem",
 									}}
 								/>
+								)
 							</div>
 							<h2 className="d-flex justify-content-center">
 								{character.name}

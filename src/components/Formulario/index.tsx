@@ -1,78 +1,86 @@
 import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-export default function Form(): JSX.Element {
-	const { getValues, reset, handleSubmit, register } = useForm();
+export default function Form() {
+	const schema = yup.object().shape({
+		nome: yup.string().required("O nome é obrigatório."),
+		email: yup
+			.string()
+			.required("O e-mail é obrigatório.")
+			.email("Informe um e-mail válido."),
+	});
 
-	function resetValues(): void {
-		reset();
+	const {
+		register,
+		handleSubmit,
+		getValues,
+		reset,
+		formState: { errors },
+	} = useForm({
+		resolver: yupResolver(schema),
+	});
+
+	function onSubmit(data: any): void {
+		console.log(data); // Aqui estão os dados do formulário
 	}
 
-	function onSubmit(): void {
-		const { nome, email, telefone, idade } = getValues();
+	function mostrarValor(): void {
+		const { nome, email } = getValues();
 
-		if (nome != "" && email != "" && telefone != "" && idade != "") {
-			console.log("ebaaaa tudo certo com os dados!");
-		} else {
-			console.log("deu errado aí, faltou preencher algum dado!");
-		}
+		// Realize a validação dinâmica com os valores dos campos
+		// Exemplo de validação simples
+		console.log("valor de nome: ", nome);
+		console.log("valor de email: ", email);
+	}
+
+	function limparValor(): void {
+		console.log("Antes de limpar", getValues());
+		reset();
+		console.log("Depois de limpar", getValues());
 	}
 
 	return (
 		<>
-			<form
-				onSubmit={handleSubmit(onSubmit)}
-				className="d-flex flex-column rounder-sm shadow-sm container-md"
-			>
-				<section className="d-flex flex-column mt-5">
-					<label className="d-flex flex-column">
+			<form onSubmit={handleSubmit(onSubmit)}>
+				<div>
+					<label>
 						Nome:
 						<input
 							type="text"
-							className="p-1 border-gray-20 rounder-sm border-solid-md"
 							{...register("nome")}
 						/>
 					</label>
-					<label className="d-flex flex-column mt-3">
+					<span>{errors.nome?.message}</span>
+				</div>
+
+				<br />
+
+				<div>
+					<label>
 						E-mail:
 						<input
 							type="email"
-							className="p-1 border-gray-20 rounder-sm border-solid-md"
 							{...register("email")}
 						/>
 					</label>
-					<label className="d-flex flex-column mt-3">
-						Telefone:
-						<input
-							type="text"
-							className="p-1 border-gray-20 rounder-sm border-solid-md"
-							{...register("telefone")}
-						/>
-					</label>
-					<label className="d-flex flex-column mt-3">
-						Idade:
-						<input
-							type="number"
-							className="p-1 border-gray-20 rounder-sm border-solid-md"
-							{...register("idade")}
-						/>
-					</label>
-				</section>
-
-				<div className="d-flex flex-row justify-content-center mt-5 mb-5">
-					<button
-						type="button"
-						onClick={resetValues}
-						className="br-button secondary mr-1"
-					>
-						Limpar valores
-					</button>
-					<button
-						type="submit"
-						className="br-button primary ml-1"
-					>
-						Enviar
-					</button>
+					<span>{errors.email?.message}</span>
 				</div>
+				<br />
+
+				<button
+					type="button"
+					onClick={mostrarValor}
+				>
+					Mostrar valores
+				</button>
+				<button type="submit">Enviar</button>
+				<button
+					type="button"
+					onClick={limparValor}
+				>
+					Limpar valores
+				</button>
 			</form>
 		</>
 	);

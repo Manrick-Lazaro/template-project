@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-	baseURL: "https://hp-api.onrender.com/api/",
+	baseURL: "https://api.disneyapi.dev/",
 });
 
 export default axiosInstance;

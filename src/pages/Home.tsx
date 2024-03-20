@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import DisneyService from "../src/services/DisneyService";
+import DisneyService from "../services/DisneyService";
 
 export default function Home() {
 	const [disney, setDisney] = useState([]);
@@ -41,7 +41,6 @@ export default function Home() {
 										height: "10rem",
 									}}
 								/>
-								)
 							</div>
 							<h2 className="d-flex justify-content-center">
 								{character.name}

@@ -1,86 +1,123 @@
-import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 
-export default function Form() {
+export default function Form(): JSX.Element {
 	const schema = yup.object().shape({
-		nome: yup.string().required("O nome é obrigatório."),
+		nome: yup
+			.string()
+			.required("O nome é obrigatório.")
+			.min(3, "O nome deve ter no mínimo 3 caracteres."),
 		email: yup
 			.string()
-			.required("O e-mail é obrigatório.")
+			.max(30, "O email deve ter no máximo 30 caracteres.")
+			.required("O email é obrigatório.")
 			.email("Informe um e-mail válido."),
+		telefone: yup
+			.string()
+			.test(
+				"len",
+				"O telefone deve ter exatamente 11 caracteres.",
+				(value) => !value || value.length === 11,
+			)
+			.notRequired(),
+
+		idade: yup
+			.number()
+			.transform((value) => (Number.isNaN(value) ? null : value))
+			.positive("A idade deve ser maior que zero.")
+			.integer("A idade deve ser um valor inteiro.")
+			.required("A idade é obrigatória."),
 	});
 
 	const {
-		register,
-		handleSubmit,
-		getValues,
 		reset,
+		handleSubmit,
+		register,
 		formState: { errors },
 	} = useForm({
 		resolver: yupResolver(schema),
 	});
 
-	function onSubmit(data: any): void {
-		console.log(data); // Aqui estão os dados do formulário
-	}
-
-	function mostrarValor(): void {
-		const { nome, email } = getValues();
-
-		// Realize a validação dinâmica com os valores dos campos
-		// Exemplo de validação simples
-		console.log("valor de nome: ", nome);
-		console.log("valor de email: ", email);
-	}
-
-	function limparValor(): void {
-		console.log("Antes de limpar", getValues());
+	function resetValues(): void {
 		reset();
-		console.log("Depois de limpar", getValues());
+	}
+
+	function onSubmit(): void {
+		console.log("tudo certo!");
 	}
 
 	return (
 		<>
-			<form onSubmit={handleSubmit(onSubmit)}>
-				<div>
-					<label>
+			<form
+				onSubmit={handleSubmit(onSubmit)}
+				className="d-flex flex-column rounder-sm shadow-sm container-md"
+			>
+				<section className="d-flex flex-column mt-5">
+					<label className="d-flex flex-column">
 						Nome:
 						<input
 							type="text"
+							className="p-1 border-gray-20 rounder-sm border-solid-md"
 							{...register("nome")}
 						/>
 					</label>
-					<span>{errors.nome?.message}</span>
-				</div>
+					<span className="text-red-vivid-40 text-weight-extra-bold d-flex justify-content-start">
+						{errors.nome?.message}
+					</span>
 
-				<br />
-
-				<div>
-					<label>
+					<label className="d-flex flex-column mt-3">
 						E-mail:
 						<input
 							type="email"
+							className="p-1 border-gray-20 rounder-sm border-solid-md"
 							{...register("email")}
 						/>
 					</label>
-					<span>{errors.email?.message}</span>
-				</div>
-				<br />
+					<span className="text-red-vivid-40 text-weight-extra-bold d-flex justify-content-start">
+						{errors.email?.message}
+					</span>
 
-				<button
-					type="button"
-					onClick={mostrarValor}
-				>
-					Mostrar valores
-				</button>
-				<button type="submit">Enviar</button>
-				<button
-					type="button"
-					onClick={limparValor}
-				>
-					Limpar valores
-				</button>
+					<label className="d-flex flex-column mt-3">
+						Telefone:
+						<input
+							type="text"
+							className="p-1 border-gray-20 rounder-sm border-solid-md"
+							{...register("telefone")}
+						/>
+					</label>
+					<span className="text-red-vivid-40 text-weight-extra-bold d-flex justify-content-start">
+						{errors.telefone?.message}
+					</span>
+
+					<label className="d-flex flex-column mt-3">
+						Idade:
+						<input
+							type="number"
+							className="p-1 border-gray-20 rounder-sm border-solid-md"
+							{...register("idade")}
+						/>
+					</label>
+					<span className="text-red-vivid-40 text-weight-extra-bold d-flex justify-content-start">
+						{errors.idade?.message}
+					</span>
+				</section>
+
+				<div className="d-flex flex-row justify-content-center mt-5 mb-5">
+					<button
+						type="button"
+						onClick={resetValues}
+						className="br-button secondary mr-1"
+					>
+						Limpar valores
+					</button>
+					<button
+						type="submit"
+						className="br-button primary ml-1"
+					>
+						Enviar
+					</button>
+				</div>
 			</form>
 		</>
 	);

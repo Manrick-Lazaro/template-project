@@ -16,11 +16,15 @@ export default function Form(): JSX.Element {
 		telefone: yup
 			.string()
 			.test(
+				"type",
+				"O telefone deve ser composto apenas de números.",
+				(value) => !value || /^\d+$/.test(value),
+			)
+			.test(
 				"len",
 				"O telefone deve ter exatamente 11 caracteres.",
 				(value) => !value || value.length === 11,
-			)
-			.notRequired(),
+			),
 
 		idade: yup
 			.number()
